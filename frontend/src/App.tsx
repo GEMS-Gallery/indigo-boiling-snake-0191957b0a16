@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { backend } from 'declarations/backend';
 import { useAuth } from './AuthContext';
-import { Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 type Post = {
   id: bigint;
@@ -37,8 +36,8 @@ const App: React.FC = () => {
     }
   };
 
-  const handleCategoryChange = async (e: React.ChangeEvent<{ value: unknown }>) => {
-    const newCategory = e.target.value as string;
+  const handleCategoryChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCategory = e.target.value;
     setSelectedCategory(newCategory);
     if (newCategory === 'all') {
       fetchPosts();
@@ -59,45 +58,39 @@ const App: React.FC = () => {
   return (
     <div className="container">
       <header className="header">
-        <h1>Twitter Clone</h1>
-        <Button variant="contained" onClick={handleAuth}>
+        <h1>Twitter Clone v0</h1>
+        <button className="button" onClick={handleAuth}>
           {isAuthenticated ? 'Logout' : 'Login'}
-        </Button>
+        </button>
       </header>
 
       {isAuthenticated && (
         <form onSubmit={handleCreatePost} className="post-form">
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="What's happening?"
+          <textarea
+            placeholder="What's happening?"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            margin="normal"
           />
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Category"
+          <input
+            type="text"
+            placeholder="Category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            margin="normal"
           />
-          <Button type="submit" variant="contained" color="primary">
+          <button type="submit" className="button">
             Post
-          </Button>
+          </button>
         </form>
       )}
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Filter by Category</InputLabel>
-        <Select value={selectedCategory} onChange={handleCategoryChange}>
-          <MenuItem value="all">All Categories</MenuItem>
-          <MenuItem value="technology">Technology</MenuItem>
-          <MenuItem value="sports">Sports</MenuItem>
-          <MenuItem value="entertainment">Entertainment</MenuItem>
-        </Select>
-      </FormControl>
+      <div className="category-toggle">
+        <select value={selectedCategory} onChange={handleCategoryChange}>
+          <option value="all">All Categories</option>
+          <option value="technology">Technology</option>
+          <option value="sports">Sports</option>
+          <option value="entertainment">Entertainment</option>
+        </select>
+      </div>
 
       <div className="post-list">
         {posts.map((post) => (
