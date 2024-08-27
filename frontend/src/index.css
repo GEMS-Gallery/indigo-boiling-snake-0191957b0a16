@@ -19,6 +19,27 @@ body {
   border-right: 1px solid #000000;
 }
 
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar li {
+  cursor: pointer;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar li:hover {
+  background-color: #f0f0f0;
+}
+
+.sidebar li.active {
+  background-color: #e0e0e0;
+  font-weight: bold;
+}
+
 .main-content {
   flex-grow: 1;
   padding: 20px;

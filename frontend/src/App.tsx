@@ -71,9 +71,20 @@ const App: React.FC = () => {
       <div className="sidebar">
         <h2>Categories</h2>
         <ul>
-          <li onClick={() => handleCategoryChange('all')}>All</li>
+          <li 
+            onClick={() => handleCategoryChange('all')}
+            className={selectedCategory === 'all' ? 'active' : ''}
+          >
+            All
+          </li>
           {categories.map((cat) => (
-            <li key={cat} onClick={() => handleCategoryChange(cat)}>{cat}</li>
+            <li 
+              key={cat} 
+              onClick={() => handleCategoryChange(cat)}
+              className={selectedCategory === cat ? 'active' : ''}
+            >
+              {cat}
+            </li>
           ))}
         </ul>
       </div>
