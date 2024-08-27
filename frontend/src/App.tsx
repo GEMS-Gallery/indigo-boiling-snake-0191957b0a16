@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { backend } from 'declarations/backend';
 import { useAuth } from './AuthContext';
+import MessageIcon from '@mui/icons-material/Message';
 
 type Post = {
   id: bigint;
@@ -14,11 +15,13 @@ const App: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
+  const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const { isAuthenticated, login, logout } = useAuth();
 
   useEffect(() => {
     fetchPosts();
+    fetchCategories();
   }, []);
 
   const fetchPosts = async () => {
@@ -26,18 +29,26 @@ const App: React.FC = () => {
     setPosts(fetchedPosts);
   };
 
+  const fetchCategories = async () => {
+    const fetchedCategories = await backend.getCategories();
+    setCategories(fetchedCategories);
+  };
+
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
     if (content && category) {
-      await backend.createPost(content, category);
-      setContent('');
-      setCategory('');
-      fetchPosts();
+      const result = await backend.createPost(content, category);
+      if ('ok' in result) {
+        setContent('');
+        setCategory('');
+        fetchPosts();
+      } else {
+        alert(`Error creating post: ${result.err}`);
+      }
     }
   };
 
-  const handleCategoryChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCategory = e.target.value;
+  const handleCategoryChange = async (newCategory: string) => {
     setSelectedCategory(newCategory);
     if (newCategory === 'all') {
       fetchPosts();
@@ -57,48 +68,54 @@ const App: React.FC = () => {
 
   return (
     <div className="container">
-      <header className="header">
-        <h1>Twitter Clone v0</h1>
-        <button className="button" onClick={handleAuth}>
-          {isAuthenticated ? 'Logout' : 'Login'}
-        </button>
-      </header>
-
-      {isAuthenticated && (
-        <form onSubmit={handleCreatePost} className="post-form">
-          <textarea
-            placeholder="What's happening?"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          />
-          <button type="submit" className="button">
-            Post
-          </button>
-        </form>
-      )}
-
-      <div className="category-toggle">
-        <select value={selectedCategory} onChange={handleCategoryChange}>
-          <option value="all">All Categories</option>
-          <option value="technology">Technology</option>
-          <option value="sports">Sports</option>
-          <option value="entertainment">Entertainment</option>
-        </select>
+      <div className="sidebar">
+        <h2>Categories</h2>
+        <ul>
+          <li onClick={() => handleCategoryChange('all')}>All</li>
+          {categories.map((cat) => (
+            <li key={cat} onClick={() => handleCategoryChange(cat)}>{cat}</li>
+          ))}
+        </ul>
       </div>
+      <div className="main-content">
+        <header className="header">
+          <h1><MessageIcon /> Msg</h1>
+          <button className="button" onClick={handleAuth}>
+            {isAuthenticated ? 'Logout' : 'Login'}
+          </button>
+        </header>
 
-      <div className="post-list">
-        {posts.map((post) => (
-          <div key={post.id.toString()} className="post">
-            <p>{post.content}</p>
-            <small>Category: {post.category}</small>
-          </div>
-        ))}
+        {isAuthenticated && (
+          <form onSubmit={handleCreatePost} className="post-form">
+            <textarea
+              placeholder="What's happening?"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              required
+            >
+              <option value="">Select a category</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+            <button type="submit" className="button">
+              Post
+            </button>
+          </form>
+        )}
+
+        <div className="post-list">
+          {posts.map((post) => (
+            <div key={post.id.toString()} className="post">
+              <p>{post.content}</p>
+              <small>Category: {post.category}</small>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

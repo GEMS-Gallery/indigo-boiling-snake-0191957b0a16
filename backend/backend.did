@@ -18,6 +18,7 @@ type Post =
  };
 service : {
   createPost: (text, text) -> (Result_1);
+  getCategories: () -> (vec text) query;
   getPosts: () -> (vec Post) query;
   getPostsByCategory: (text) -> (vec Post) query;
   isUserAuthenticated: (principal) -> (bool) query;

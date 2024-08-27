@@ -10,6 +10,7 @@ export const idlFactory = ({ IDL }) => {
   const Result = IDL.Variant({ 'ok' : IDL.Text, 'err' : IDL.Text });
   return IDL.Service({
     'createPost' : IDL.Func([IDL.Text, IDL.Text], [Result_1], []),
+    'getCategories' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
     'getPosts' : IDL.Func([], [IDL.Vec(Post)], ['query']),
     'getPostsByCategory' : IDL.Func([IDL.Text], [IDL.Vec(Post)], ['query']),
     'isUserAuthenticated' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),

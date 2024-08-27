@@ -27,6 +27,9 @@ actor {
   // Mutable variables
   var authenticatedUsers = HashMap.HashMap<Principal, Bool>(10, Principal.equal, Principal.hash);
 
+  // Categories
+  let categories = ["News", "Gaming", "Sports", "Technology", "Entertainment", "Other"];
+
   // Helper functions
   func isAuthenticated(caller : Principal) : Bool {
     switch (authenticatedUsers.get(caller)) {
@@ -41,11 +44,22 @@ actor {
       return #err("User not authenticated");
     };
 
+    let trimmedCategory = Text.trim(category, #char(' '));
+    if (trimmedCategory == "") {
+      return #err("Category cannot be empty");
+    };
+
+    let normalizedCategory = Text.toLowercase(trimmedCategory);
+
+    if (Array.filter(categories, func (c : Text) : Bool { Text.toLowercase(c) == normalizedCategory }).size() == 0) {
+      return #err("Invalid category");
+    };
+
     let post : Post = {
       id = nextPostId;
       author = ?msg.caller;
       content = content;
-      category = category;
+      category = trimmedCategory;
       timestamp = Time.now();
     };
 
@@ -59,9 +73,14 @@ actor {
   };
 
   public query func getPostsByCategory(category : Text) : async [Post] {
+    let normalizedCategory = Text.toLowercase(Text.trim(category, #char(' ')));
     Array.filter(posts, func (post : Post) : Bool {
-      post.category == category
+      Text.toLowercase(post.category) == normalizedCategory
     })
+  };
+
+  public query func getCategories() : async [Text] {
+    categories
   };
 
   public shared(msg) func login() : async Result.Result<Text, Text> {

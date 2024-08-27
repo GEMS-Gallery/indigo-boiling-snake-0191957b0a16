@@ -4,12 +4,24 @@ body {
   color: #000000;
   line-height: 1.6;
   margin: 0;
-  padding: 20px;
+  padding: 0;
 }
 
 .container {
-  max-width: 800px;
+  display: flex;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.sidebar {
+  width: 200px;
+  padding: 20px;
+  border-right: 1px solid #000000;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
 }
 
 .header {
@@ -25,8 +37,8 @@ body {
   margin-bottom: 20px;
 }
 
-.post-form input,
-.post-form textarea {
+.post-form textarea,
+.post-form select {
   width: 100%;
   margin-bottom: 10px;
   font-family: monospace;
@@ -39,10 +51,6 @@ body {
 .post {
   border-bottom: 1px solid #000000;
   padding: 10px 0;
-}
-
-.category-toggle {
-  margin-bottom: 20px;
 }
 
 .button {

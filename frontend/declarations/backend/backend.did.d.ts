@@ -15,6 +15,7 @@ export type Result_1 = { 'ok' : bigint } |
   { 'err' : string };
 export interface _SERVICE {
   'createPost' : ActorMethod<[string, string], Result_1>,
+  'getCategories' : ActorMethod<[], Array<string>>,
   'getPosts' : ActorMethod<[], Array<Post>>,
   'getPostsByCategory' : ActorMethod<[string], Array<Post>>,
   'isUserAuthenticated' : ActorMethod<[Principal], boolean>,
