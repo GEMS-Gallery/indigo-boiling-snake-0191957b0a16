@@ -66,6 +66,10 @@ const App: React.FC = () => {
     }
   };
 
+  const formatDate = (timestamp: bigint) => {
+    return new Date(Number(timestamp) / 1000000).toLocaleString();
+  };
+
   return (
     <div className="container">
       <div className="sidebar">
@@ -122,8 +126,11 @@ const App: React.FC = () => {
         <div className="post-list">
           {posts.map((post) => (
             <div key={post.id.toString()} className="post">
-              <p>{post.content}</p>
-              <small>Category: {post.category}</small>
+              <div className="post-content">{post.content}</div>
+              <div className="post-meta">
+                <span>Category: {post.category}</span>
+                <span>{formatDate(post.timestamp)}</span>
+              </div>
             </div>
           ))}
         </div>
