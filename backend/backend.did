@@ -1,0 +1,26 @@
+type Result_1 = 
+ variant {
+   err: text;
+   ok: nat;
+ };
+type Result = 
+ variant {
+   err: text;
+   ok: text;
+ };
+type Post = 
+ record {
+   author: opt principal;
+   category: text;
+   content: text;
+   id: nat;
+   timestamp: int;
+ };
+service : {
+  createPost: (text, text) -> (Result_1);
+  getPosts: () -> (vec Post) query;
+  getPostsByCategory: (text) -> (vec Post) query;
+  isUserAuthenticated: (principal) -> (bool) query;
+  login: () -> (Result);
+  logout: () -> (Result);
+}
